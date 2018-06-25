@@ -6,7 +6,6 @@ import DBHelper from './dbhelper';
 let restaurant;
 var map;
 
-
 /**
  * Initialize Google map, called from HTML.
  */
@@ -47,6 +46,16 @@ const fetchRestaurantFromURL = (callback) => {
         return;
       }
       fillRestaurantHTML();
+
+      DBHelper.fetchReviewsAPI(id, (error, reviews) => {
+        if (!reviews) {
+          console.error(error);
+          return;
+        }
+        // fill reviews
+        fillReviewsHTML(reviews);
+      });
+
       callback(null, restaurant)
     });
   }
@@ -78,8 +87,6 @@ const fillRestaurantHTML = (restaurant = self.restaurant) => {
   if (restaurant.operating_hours) {
     fillRestaurantHoursHTML();
   }
-  // fill reviews
-  fillReviewsHTML();
 }
 
 /**
@@ -122,6 +129,10 @@ const fillReviewsHTML = (reviews = self.restaurant.reviews) => {
     ul.appendChild(createReviewHTML(review));
   });
   container.appendChild(ul);
+  // TODO: create an add review form HTML.
+  const form = document.createElement('form');
+  form.innerHTML = 'New Review';
+  container.appendChild(form);
 }
 
 /**
@@ -134,7 +145,8 @@ const createReviewHTML = (review) => {
   li.appendChild(name);
 
   const date = document.createElement('p');
-  date.innerHTML = review.date;
+  var dateCreatedAt = new Date(review.createdAt);
+  date.innerHTML = dateCreatedAt.toDateString();
   li.appendChild(date);
 
   const rating = document.createElement('p');

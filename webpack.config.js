@@ -68,27 +68,36 @@ const config = {
 
   plugins: [
     // cleaning up only 'dist' folder
-    new CleanWebpackPlugin(['dist']),
-  //   new HtmlWebpackPlugin({
-  //   chunks: ['main'],
-  //   filename: 'index.html',
-  //   template: 'index.html'
-  // }),
-  // new HtmlWebpackPlugin({
-  //   chunks: ['restaurant'],
-  //   filename: 'restaurant.html',
-  //   template: 'restaurant.html'
-  //   }),
-    // extract-text-webpack-plugin instance
-    // extractPlugin,
-    // copy images to dist folder
-    new CopyWebpackPlugin([
+
+    //temporary disabled
+    //uncomment below
+    /*     new CleanWebpackPlugin(['dist']), */
+    
+    //   new HtmlWebpackPlugin({
+      //   chunks: ['main'],
+      //   filename: 'index.html',
+      //   template: 'index.html'
+      // }),
+      // new HtmlWebpackPlugin({
+        //   chunks: ['restaurant'],
+        //   filename: 'restaurant.html',
+        //   template: 'restaurant.html'
+        //   }),
+        // extract-text-webpack-plugin instance
+        // extractPlugin,
+        // copy images to dist folder
+        
+        
+    //temporary disabled
+    //uncomment below
+/*     new CopyWebpackPlugin([
       { from:'assets/media', to:'assets/media' },
       { from:'sw.js', to:'sw.js' },
       { from:'manifest.json', to:'manifest.json' },
       { from:'index.html', to:'index.html' },
       { from:'restaurant.html', to:'restaurant.html' }
-    ]),
+    ]), */
+
     new UglifyJsPlugin()
   ],
 

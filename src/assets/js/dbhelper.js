@@ -13,13 +13,13 @@ class DBHelper {
     // return `http://localhost:${port}/data/restaurants.json`;
 
     const port = 1337 // Change this to your server port
-    return `http://localhost:${port}/restaurants`;
+    return `http://localhost:${port}`;
   }
 
   /**
    * Fetch all restaurants from API.
    */
-  static fetchRestaurantsAPI(callback) {
+/*   static fetchRestaurantsAPI(callback) {
     let xhr = new XMLHttpRequest();
     xhr.open('GET', DBHelper.DATABASE_URL);
     xhr.onload = () => {
@@ -34,6 +34,47 @@ class DBHelper {
       }
     };
     xhr.send();
+  } */
+
+
+  /**
+   * Fetch all restaurants from API. Fetch method
+   */
+  static fetchRestaurantsAPI(callback) {
+    fetch(DBHelper.DATABASE_URL + "/restaurants")
+    .then(response => {
+      if (response.status === 200) { // Got a success response from server!
+        return response.json();
+      } else { // Oops!. Got an error from server.
+        const error = (`Request failed. Returned status of ${response.status}`);
+        callback(error, null);
+      }
+    })
+    .then(data => {
+        self.restaurants = data;
+        set('idbRestaurants', self.restaurants);
+        callback(null, self.restaurants);
+    });
+  }
+
+  /**
+   * Fetch restaurant reviews from API. Fetch method
+   */
+  static fetchReviewsAPI(id, callback) {
+    fetch(DBHelper.DATABASE_URL + "/reviews/?restaurant_id=" + id)
+    .then(response => {
+      if (response.status === 200) { // Got a success response from server!
+        return response.json();
+      } else { // Oops!. Got an error from server.
+        const error = (`Request failed. Returned status of ${response.status}`);
+        callback(error, null);
+      }
+    })
+    .then(data => {
+        self.restaurant.reviews = data;
+        set('idbReviews', self.restaurant.reviews);
+        callback(null, self.restaurant.reviews);
+    });
   }
 
   /**
