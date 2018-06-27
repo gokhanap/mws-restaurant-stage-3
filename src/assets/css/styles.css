@@ -44,7 +44,7 @@ label {
   /* min-height: 100%; */
   display: flex;
   /* flex-direction:  column; */
-  align-items: stretch;
+  justify-content: center;
   flex-wrap: wrap;
 }
 #footer {
@@ -85,6 +85,18 @@ nav h1 a {
   top: 0px;
   color: white;
 }
+.toggle-map {
+  color: white;
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: #E60066;
+  padding: 13px;
+  z-index: 100;
+}
+.toggle-map:focus {
+  /* top: 0px; */
+}
 #breadcrumb {
   box-sizing:  border-box;
   padding: 5px 40px 5px 10px;
@@ -119,11 +131,13 @@ nav h1 a {
 }
 /* ====================== Map ====================== */
 #map {
+  /* display: none; */
   height: 400px;
   width: 100%;
   background-color: #ccc;
 }
 #map-container {
+  /* display: none; */
   height: 400px;
   width: 100%;
   background-color: #ccc;
@@ -317,10 +331,26 @@ nav h1 a {
   border-top: 1px solid #fff;
   box-sizing:  border-box;
   padding: 30px 30px 30px;
-  display:  block;
+  /* display: flex; */
+  /* flex-wrap: wrap; */
 }
+#is-favourite {
+  color: #666;
+  margin-left: 10px;
+  padding: 0px 5px 0px 5px;
+  cursor: pointer;
+  border-radius: 20px;
+}
+#is-favourite.active {
+  color: #E60066;
+}
+#is-favourite:hover {
+  background-color: #d9d9d9;
+  color: #E60066;
+}
+
 /* #reviews-container {
-  padding: 30px 30px 30px;
+  align-self: center;
 } */
 #reviews-container h2 {
   color: #E60066;
@@ -350,6 +380,18 @@ nav h1 a {
 #restaurant-hours td {
   color: #666;
 }
+#review-form-container {
+  box-sizing:  border-box;
+  padding: 30px 30px 30px;
+}
+#review-form input, #review-form textarea {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px;
+  margin: 5px 0 5px 0;
+  font-size: 1.1em;
+}
+
 /* Media Queries */
 @media screen and (min-width: 480px) {
   .filter-options  {
@@ -377,13 +419,16 @@ nav h1 a {
   
 }
 @media screen and (min-width: 768px) {
+  #map-container {
+    display: block;
+  }
   #restaurants-list li {
     max-width: 50%;
   }
   .inside #map-container {
     width: 50%;
-    height: unset;
-    /* align-self: stretch; */
+    height: auto;
+    align-items: stretch;
     background-color: #ccc;
     order: 2;
   }
@@ -394,11 +439,16 @@ nav h1 a {
     border: 0;
   }
   .inside #reviews-container {
-    width: 50%;
+    width: 75%;
     /* background-color: yellow; */
     order: 3;
-    align-self: flex-end;
+    align-self: center;
     justify-content: flex-start;
+  }
+  .inside #review-form-container {
+    width: 75%;
+    background-color: yellow;
+    order: 4;
   }
 }
 @media screen and (min-width: 1224px) {

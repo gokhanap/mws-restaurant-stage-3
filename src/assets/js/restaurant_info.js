@@ -2,6 +2,7 @@ import '../css/normalize.css';
 import '../css/styles.css';
 
 import DBHelper from './dbhelper';
+import { get } from 'idb-keyval';
 
 let restaurant;
 var map;
@@ -67,6 +68,16 @@ const fetchRestaurantFromURL = (callback) => {
 const fillRestaurantHTML = (restaurant = self.restaurant) => {
   const name = document.getElementById('restaurant-name');
   name.innerHTML = restaurant.name;
+  
+  const isFavourite = document.createElement('span');
+  isFavourite.innerHTML = "♥";
+  isFavourite.id = "is-favourite";
+  isFavourite.addEventListener("click", handleFavourite);
+
+  if (restaurant.is_favorite) {
+    isFavourite.setAttribute("class", "active");
+  }
+  name.appendChild(isFavourite);
 
   const address = document.getElementById('restaurant-address');
   address.innerHTML = restaurant.address;
@@ -129,10 +140,11 @@ const fillReviewsHTML = (reviews = self.restaurant.reviews) => {
     ul.appendChild(createReviewHTML(review));
   });
   container.appendChild(ul);
-  // TODO: create an add review form HTML.
-  const form = document.createElement('form');
-  form.innerHTML = 'New Review';
-  container.appendChild(form);
+
+  // Event handler for submit button
+  const form = document.getElementById('form-submit');
+  form.addEventListener("click", handleSubmit);
+  
 }
 
 /**
@@ -143,7 +155,7 @@ const createReviewHTML = (review) => {
   const name = document.createElement('p');
   name.innerHTML = review.name;
   li.appendChild(name);
-
+  
   const date = document.createElement('p');
   var dateCreatedAt = new Date(review.createdAt);
   date.innerHTML = dateCreatedAt.toDateString();
@@ -185,4 +197,99 @@ const getParameterByName = (name, url) => {
   if (!results[2])
     return '';
   return decodeURIComponent(results[2].replace(/\+/g, ' '));
+}
+
+/** 
+ * Handle favourite click 
+ */
+const handleFavourite = (e) => {
+  const favBtn = e.target;
+  const id = self.restaurant.id;
+  // Disable submit button
+  favBtn.removeEventListener("click", handleFavourite)
+  // get current favourite status
+  const favstatus = self.restaurant.is_favorite;
+
+  // update fav status on the server
+  DBHelper.favRestaurantAPI(id, !favstatus, (error, response) => {
+    // self.restaurant = restaurant;
+    if (!response) {
+      console.error(error);
+      alert(error);
+      return;
+    } else {
+      if (favstatus) {
+        self.restaurant.is_favorite = !self.restaurant.is_favorite;
+        favBtn.setAttribute("class", "");
+      } else {
+        self.restaurant.is_favorite = !self.restaurant.is_favorite;
+        favBtn.setAttribute("class", "active");
+      }
+    }
+  });
+  // Enable submit button
+  favBtn.addEventListener("click", handleFavourite);
+}
+
+/** 
+ * Handle submit click 
+ */
+const handleSubmit = (e) => {
+  // Disable submit button
+  const submitBtn = e.target;
+  submitBtn.removeEventListener("click", handleSubmit);
+  // get form data
+  const form = document.getElementById("review-form");
+  const name = form[0].value;
+  const comments = form[1].value;
+  const rating = form[2].value;
+  const id = self.restaurant.id;
+  // prepare review object for server
+  const review = {
+    "restaurant_id": id,
+    "name": name,
+    "rating": rating,
+    "comments": comments
+  };
+  // Send review to server
+  sendReview(review);
+  // Enable submit button
+  submitBtn.addEventListener("click", handleSubmit);
+}
+
+/** 
+ * Send review 
+ */ 
+const sendReview = (review) => {
+  DBHelper.postReviewAPI(review, (error, response) => {
+    // self.restaurant = restaurant;
+    if (!response) {
+      window.addEventListener('online', syncReview);
+      alert(error + " Your review will be sent when the connection is re-established.");
+      return;
+    } else {
+      const ul = document.getElementById('reviews-list');
+      ul.appendChild(createReviewHTML(response));
+      //reset form
+      const form = document.getElementById("review-form");
+      resetForm(form);
+    }
+  });
+}
+
+/** 
+ * Sync review 
+ */ 
+const syncReview = (review) => {
+  get('idbReviewTemp').then(review => sendReview(review));
+  window.removeEventListener('online', syncReview);
+}
+
+/**
+ * Reset form 
+ */
+const resetForm = (form) => {
+  form[0].value = null; // name
+  form[1].value = null; // comments
+  form[2].value = 1; // rating
 }

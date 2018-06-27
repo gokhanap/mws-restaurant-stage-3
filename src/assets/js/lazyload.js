@@ -8,7 +8,7 @@ export default function lazyLoad () {
   images = document.querySelectorAll('.restaurant-img');
   const config = {
     // If the image gets within 10px in the Y axis, start the download.
-    rootMargin: '10px 0px',
+    rootMargin: '-150px 0px',
     threshold: 0.01
   };
 

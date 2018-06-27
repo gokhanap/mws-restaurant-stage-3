@@ -231,6 +231,92 @@ class DBHelper {
     return marker;
   }
 
+
+  /**
+   * Post a restaurant review to server.
+   */
+  static postReviewAPI(review, callback) {
+      fetch(`${DBHelper.DATABASE_URL}/reviews/`, {
+        method: "post",
+        body: JSON.stringify(review)
+      })
+      .then(response => {
+        if (response.status === 201) { // Got a success response from server!
+          return response.json();
+        } else { // Oops!. Got an error from server.
+          const error = (`Request failed. Returned status of ${response.status}`);
+          callback(error, null);
+        }
+      })
+      .then(data => {
+        self.restaurant.reviews.push(data);
+        set('idbReviews', self.restaurant.reviews);
+        callback(null, data);
+      })
+      .catch((error) => {
+        DBHelper.saveOnIdbReviewTemp(review);
+        return callback(error, null); // Failed to fetch.
+      });
+  }
+
+
+
+  /**
+   * Save review on IdbReviewTemp.
+   */
+  static saveOnIdbReviewTemp(review) {
+    set('idbReviewTemp', review);
+  }
+
+  
+  /**
+   * Change favourite status of a restaurant on the server.
+   */
+  static favRestaurantAPI(id, fav, callback) {
+
+    fetch(`${DBHelper.DATABASE_URL}/restaurants/${id}/?is_favorite=${fav}`, {
+      method: "put"/* ,
+      body: JSON.stringify(review) */
+    })
+    .then(response => {
+      if (response.status === 200) { // Got a success response from server!
+        return response.json();
+      } else { // Oops!. Got an error from server.
+        const error = (`Request failed. Returned status of ${response.status}`);
+        return callback(error, null);
+      }
+    })
+    .then(data => {
+      // response object returns 'is_favorite' as a string
+      // it has to be boolean. fixing issue...
+      const newFavStatus = data.is_favorite == 'true';
+      // console.log(typeof newFavStatus);
+      // console.log(newFavStatus);
+
+      self.restaurant.is_favorite = newFavStatus;
+      
+      // get recent Idb data and update
+      get('idbRestaurants').then(restaurants => {
+    
+        if (typeof restaurants !== "undefined") {
+          restaurants.map( restaurant => {
+            if(restaurant.id === data.id) {
+              restaurant.is_favorite = newFavStatus;
+              return;
+            }
+          });
+          // update idb
+          set('idbRestaurants', restaurants);
+        } else {
+          callback('No Data at IndexedDB', null);
+        }
+      });
+      callback(null, data);
+    })
+    .catch((error) => {
+      return callback(error, null); // Failed to fetch.
+    });
+  }
 }
 
 export default DBHelper;

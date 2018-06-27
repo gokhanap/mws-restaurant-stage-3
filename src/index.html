@@ -8,8 +8,119 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="manifest" href="./manifest.json">
     <link rel="icon" type="image/png" href="./assets/media/review.png">
-    <script type="text/javascript" src="./sw.js"></script>
+    <!-- <script type="text/javascript" src="./sw.js"></script> -->
+    <!-- Service worker inlined -->
+    <script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function() {
+    navigator.serviceWorker.register('./sw.js').then(function(registration) {
+      // Registration was successful
+      console.log('ServiceWorker registration successful with scope: ', registration.scope);
+    }, function(err) {
+      // registration failed :(
+      console.log('ServiceWorker registration failed: ', err);
+    });
+  });
+}
+
+var CACHE_NAME = 'restaurant-reviews-v1';
+var urlsToCache = [
+  '/',
+  '/manifest.json',
+  '/sw.js',
+  '/index.html',
+  '/assets/media/1.jpg',
+  '/assets/media/1_400.jpg',
+  '/assets/media/1_720.jpg',
+  '/assets/media/2.jpg',
+  '/assets/media/2_400.jpg',
+  '/assets/media/2_720.jpg',
+  '/assets/media/3.jpg',
+  '/assets/media/3_400.jpg',
+  '/assets/media/3_720.jpg',
+  '/assets/media/4.jpg',
+  '/assets/media/4_400.jpg',
+  '/assets/media/4_720.jpg',
+  '/assets/media/5.jpg',
+  '/assets/media/5_400.jpg',
+  '/assets/media/5_720.jpg',
+  '/assets/media/6.jpg',
+  '/assets/media/6_400.jpg',
+  '/assets/media/6_720.jpg',
+  '/assets/media/7.jpg',
+  '/assets/media/7_400.jpg',
+  '/assets/media/7_720.jpg',
+  '/assets/media/8.jpg',
+  '/assets/media/8_400.jpg',
+  '/assets/media/8_720.jpg',
+  '/assets/media/9.jpg',
+  '/assets/media/9_400.jpg',
+  '/assets/media/9_720.jpg',
+  '/assets/media/10.jpg',
+  '/assets/media/10_400.jpg',
+  '/assets/media/10_720.jpg',
+  '/assets/media/review.svg',
+  '/assets/media/review.png',
+  '/assets/js/main.bundle.js',
+  '/assets/js/restaurant.bundle.js',
+  'https://fonts.googleapis.com/css?family=Ubuntu:700|Ubuntu+Condensed'
+];
+
+self.addEventListener('install', function(event) {
+  // Perform install steps
+  event.waitUntil(
+    caches.open(CACHE_NAME)
+      .then(function(cache) {
+        console.log('Opened cache');
+        return cache.addAll(urlsToCache);
+      })
+  );
+});
+
+self.addEventListener('fetch', function(event) {
+  event.respondWith(
+    caches.match(event.request)
+      .then(function(response) {
+        // Cache hit - return response
+        if (response) {
+          return response;
+        }
+
+        // IMPORTANT: Clone the request. A request is a stream and
+        // can only be consumed once. Since we are consuming this
+        // once by cache and once by the browser for fetch, we need
+        // to clone the response.
+        var fetchRequest = event.request.clone();
+
+        return fetch(fetchRequest).then(
+          function(response) {
+            // Check if we received a valid response
+            if(!response || response.status !== 200 || response.type !== 'basic') {
+              return response;
+            }
+
+            // IMPORTANT: Clone the response. A response is a stream
+            // and because we want the browser to consume the response
+            // as well as the cache consuming the response, we need
+            // to clone it so we have two streams.
+            var responseToCache = response.clone();
+
+            caches.open(CACHE_NAME)
+              .then(function(cache) {
+                cache.put(event.request, responseToCache);
+              });
+
+            return response;
+          }
+        );
+      })
+    );
+});
+    </script>
     <script async defer type="text/javascript" src="./assets/js/main.bundle.js"></script>
+
+    <!-- <script async defer src="https://maps.googleapis.com/maps/api/staticmap?center=40.722216,-73.987501&zoom=12&size=600x300&maptype=roadmap&markers=color:red%7Clabel:C%7C40.718217,-73.998284&key=AIzaSyDx0zE_ZCZFSzmWsMI2lr1nNTI8iv3m8GU&language=en"></script> -->
+    <!-- <script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDx0zE_ZCZFSzmWsMI2lr1nNTI8iv3m8GU&language=en&libraries=places"></script> -->
     <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDx0zE_ZCZFSzmWsMI2lr1nNTI8iv3m8GU&language=en&libraries=places&callback=initMap"></script>
     <title>Restaurant Reviews</title>
   </head>
@@ -20,6 +131,7 @@
       <nav>
         <h1><a href="/">Restaurant Reviews</a></h1>
       </nav>
+      <!-- <a class="toggle-map" onclick="toggleMap()">Toggle map</a> -->
     </header>
     
     <main id="maincontent">
@@ -62,8 +174,15 @@
 
 <!-- <link rel="stylesheet" type="text/css" href="/assets/css/normalize.css">
   <link rel="stylesheet" type="text/css" href="/assets/css/styles.css"> -->
-  <link href="https://fonts.googleapis.com/css?family=Ubuntu:700|Ubuntu+Condensed" rel="stylesheet">
-  
+<!-- <link href="https://fonts.googleapis.com/css?family=Ubuntu:700|Ubuntu+Condensed" rel="stylesheet" lazyload> -->
+<script src="https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js"></script>
+<script>
+  WebFont.load({
+    google: {
+      families: ['Ubuntu:700', 'Ubuntu Condensed']
+    }
+  });
+</script>  
 </body>
 
 </html>

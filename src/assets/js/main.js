@@ -4,10 +4,10 @@ import DBHelper from './dbhelper';
 import lazyLoad from './lazyload';
 
 let restaurants,
-  neighborhoods,
-  cuisines
-var map
-var markers = []
+neighborhoods,
+cuisines,
+map;
+window.markers = [];
 
 const fetchRestaurantsAPI = () => {
   DBHelper.fetchRestaurantsAPI((error, restaurants) => {
@@ -16,7 +16,7 @@ const fetchRestaurantsAPI = () => {
     } else {
       console.log('Restaurant API Success:', restaurants);
       fetchNeighborhoods();
-      fetchCuisines();      
+      fetchCuisines();
       // updateRestaurants();
     }
   });
@@ -26,8 +26,9 @@ fetchRestaurantsAPI();
 /**
  * Fetch neighborhoods and cuisines as soon as the page is loaded.
  */
-document.addEventListener('DOMContentLoaded', (event) => {
-});
+// window.addEventListener('DOMContentLoaded', (event) => {
+  // updateRestaurants();
+// });
 
 /**
  * Fetch all neighborhoods and set their HTML.
@@ -76,7 +77,7 @@ const fetchCuisines = () => {
 
 const fillCuisinesHTML = (cuisines = self.cuisines) => {
   const select = document.getElementById('cuisines-select');
-
+  
   cuisines.forEach(cuisine => {
     const option = document.createElement('option');
     option.innerHTML = cuisine;
@@ -106,6 +107,7 @@ window.initMap = () => {
     scrollwheel: false
   });
   updateRestaurants();
+  // addMarkersToMap();
 }
 
 /**
@@ -127,6 +129,7 @@ const updateRestaurants = () => {
     } else {
       resetRestaurants(restaurants);
       fillRestaurantsHTML();
+      // addMarkersToMap();
     }
   })
 }
@@ -156,8 +159,8 @@ const fillRestaurantsHTML = (restaurants = self.restaurants) => {
   restaurants.forEach(restaurant => {
     ul.append(createRestaurantHTML(restaurant));
   });
-  addMarkersToMap();
   lazyLoad();
+  addMarkersToMap();
 }
 
 /**
@@ -209,3 +212,13 @@ const addMarkersToMap = (restaurants = self.restaurants) => {
     self.markers.push(marker);
   });
 }
+
+// window.toggleMap = (e) => {
+//   const map = document.getElementById('map-container');
+//   if (map.style.display !== 'block') {
+//     map.style.display = 'block';
+//     // window.initMap();
+//   } else {
+//     map.style.display = 'none';
+//   }
+// }
