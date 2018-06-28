@@ -22,7 +22,7 @@
           "Sunday": "12:00 pm - 4:00 pm, 5:30 pm - 11:00 pm"
         },
         "createdAt": 1504095563444,
-        "updatedAt": "2018-06-28T00:10:43.284Z",
+        "updatedAt": "2018-06-28T08:20:32.903Z",
         "id": 1,
         "is_favorite": "false"
       },
@@ -47,8 +47,8 @@
           "Sunday": "12:00 pm - 3:00 pm, 5:00 pm - 11:00 pm"
         },
         "createdAt": 1504095568414,
-        "updatedAt": "2017-09-14T14:05:54.800Z",
-        "is_favorite": true,
+        "updatedAt": "2018-06-28T07:16:19.888Z",
+        "is_favorite": "true",
         "id": 2
       },
       {
@@ -72,8 +72,9 @@
           "Sunday": "11:30 am - 2:00 am"
         },
         "createdAt": 1504095571434,
-        "updatedAt": 1504095571434,
-        "id": 3
+        "updatedAt": "2018-06-28T08:06:39.632Z",
+        "id": 3,
+        "is_favorite": "true"
       },
       {
         "name": "Katz's Delicatessen",
@@ -96,8 +97,8 @@
           "Sunday": "Sat - 10:30 pm"
         },
         "createdAt": 1504095567091,
-        "updatedAt": 1504095567091,
-        "is_favorite": false,
+        "updatedAt": "2018-06-28T08:10:04.027Z",
+        "is_favorite": "false",
         "id": 4
       },
       {
@@ -171,8 +172,8 @@
           "Sunday": "11:30 am - 10:00 pm"
         },
         "createdAt": 1504095567091,
-        "updatedAt": 1504095567091,
-        "is_favorite": false,
+        "updatedAt": "2018-06-28T08:18:52.465Z",
+        "is_favorite": "false",
         "id": 7
       },
       {
@@ -196,8 +197,8 @@
           "Sunday": "10:00 am - 3:00 pm, 5:30 pm - 11:00 pm"
         },
         "createdAt": 1504095567091,
-        "updatedAt": 1504095567091,
-        "is_favorite": false,
+        "updatedAt": "2018-06-28T08:18:42.785Z",
+        "is_favorite": "true",
         "id": 8
       },
       {
@@ -539,60 +540,6 @@
         "createdAt": "2018-06-27T08:52:12.598Z",
         "updatedAt": "2018-06-27T08:52:12.598Z",
         "id": 50
-      },
-      {
-        "restaurant_id": 1,
-        "name": "assan",
-        "rating": "2",
-        "comments": "fair restaurant",
-        "createdAt": "2018-06-27T09:07:08.707Z",
-        "updatedAt": "2018-06-27T09:07:08.707Z",
-        "id": 51
-      },
-      {
-        "restaurant_id": 1,
-        "name": "ho ho ",
-        "rating": "2",
-        "comments": "ho ho ho",
-        "createdAt": "2018-06-27T20:45:05.235Z",
-        "updatedAt": "2018-06-27T20:45:05.235Z",
-        "id": 52
-      },
-      {
-        "restaurant_id": 1,
-        "name": "no ",
-        "rating": "1",
-        "comments": "yes",
-        "createdAt": "2018-06-27T20:47:08.705Z",
-        "updatedAt": "2018-06-27T20:47:08.705Z",
-        "id": 53
-      },
-      {
-        "restaurant_id": 1,
-        "name": "yees yes yes",
-        "rating": "2",
-        "comments": "yes 22",
-        "createdAt": "2018-06-27T20:50:53.624Z",
-        "updatedAt": "2018-06-27T20:50:53.624Z",
-        "id": 54
-      },
-      {
-        "restaurant_id": 1,
-        "name": "tjrrt",
-        "rating": "1",
-        "comments": "jrtjrtjr",
-        "createdAt": "2018-06-27T20:51:18.624Z",
-        "updatedAt": "2018-06-27T20:51:18.624Z",
-        "id": 55
-      },
-      {
-        "restaurant_id": 1,
-        "name": "dfhdfh",
-        "rating": "1",
-        "comments": "dddh",
-        "createdAt": "2018-06-28T00:10:49.260Z",
-        "updatedAt": "2018-06-28T00:10:49.260Z",
-        "id": 56
       }
     ]
   },
@@ -648,7 +595,7 @@
       "id": 10
     },
     "reviews": {
-      "id": 56
+      "id": 65
     }
   }
 }

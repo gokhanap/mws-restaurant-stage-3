@@ -3,13 +3,7 @@ if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('./sw.js').then(function(registration) {
       // Registration was successful
       console.log('ServiceWorker registration successful with scope: ', registration.scope);
-      console.dir(registration);
-
-//       if ('sync' in registration) {
-//         // do stuff here
-//       }
-        
-
+      
     }, function(err) {
       // registration failed :(
       console.log('ServiceWorker registration failed: ', err);
@@ -57,7 +51,19 @@ var urlsToCache = [
   '/assets/media/review.png',
   '/assets/js/main.bundle.js',
   '/assets/js/restaurant.bundle.js',
-  'https://fonts.googleapis.com/css?family=Ubuntu:700|Ubuntu+Condensed'
+  'https://unpkg.com/leaflet@1.3.1/dist/leaflet.css',
+  'https://unpkg.com/leaflet@1.3.1/dist/leaflet.js',
+  'https://unpkg.com/leaflet@1.3.1/dist/images/marker-icon.png',
+  'https://unpkg.com/leaflet@1.3.1/dist/images/marker-shadow.png',
+  'https://fonts.googleapis.com/css?family=Ubuntu:700|Ubuntu+Condensed',
+  'https://fonts.gstatic.com/s/ubuntucondensed/v8/u-4k0rCzjgs5J7oXnJcM_0kACGMtT-Dfq9PrNX0.woff2',
+  'https://fonts.gstatic.com/s/ubuntu/v11/4iCv6KVjbNBYlgoCxCvjsGyNPYZvgw.woff2',
+  'https://api.tiles.mapbox.com/v4/mapbox.streets/12/1205/1540.jpg70?access_token=pk.eyJ1IjoiZ29raGFuYXAiLCJhIjoiY2ppeHM4OWl2MDJzaDNrcXBqN25tZzNrZCJ9.cxPDTLgFdjaMdmj06H_DUg',
+  'https://api.tiles.mapbox.com/v4/mapbox.streets/12/1206/1539.jpg70?access_token=pk.eyJ1IjoiZ29raGFuYXAiLCJhIjoiY2ppeHM4OWl2MDJzaDNrcXBqN25tZzNrZCJ9.cxPDTLgFdjaMdmj06H_DUg',
+  'https://api.tiles.mapbox.com/v4/mapbox.streets/12/1206/1540.jpg70?access_token=pk.eyJ1IjoiZ29raGFuYXAiLCJhIjoiY2ppeHM4OWl2MDJzaDNrcXBqN25tZzNrZCJ9.cxPDTLgFdjaMdmj06H_DUg',
+  'https://api.tiles.mapbox.com/v4/mapbox.streets/12/1205/1539.jpg70?access_token=pk.eyJ1IjoiZ29raGFuYXAiLCJhIjoiY2ppeHM4OWl2MDJzaDNrcXBqN25tZzNrZCJ9.cxPDTLgFdjaMdmj06H_DUg',
+  'https://api.tiles.mapbox.com/v4/mapbox.streets/12/1207/1539.jpg70?access_token=pk.eyJ1IjoiZ29raGFuYXAiLCJhIjoiY2ppeHM4OWl2MDJzaDNrcXBqN25tZzNrZCJ9.cxPDTLgFdjaMdmj06H_DUg',
+  'https://api.tiles.mapbox.com/v4/mapbox.streets/12/1207/1540.jpg70?access_token=pk.eyJ1IjoiZ29raGFuYXAiLCJhIjoiY2ppeHM4OWl2MDJzaDNrcXBqN25tZzNrZCJ9.cxPDTLgFdjaMdmj06H_DUg'
 ];
 
 self.addEventListener('install', function(event) {

@@ -11,9 +11,12 @@ A form for adding new review and a favourite restaurant button added on stage th
 Form works offline and synchronize data when online.
 
 ### Site Performance
-Progressive Web App: 98
-Performance: 91
-Accessibility: 100
+* Progressive Web App: 97
+* Performance: 91
+* Accessibility: 100
+
+Check the audit report file:
+`audit-report-20180628T162432.htm`
 
 ### Instructions
 

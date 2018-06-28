@@ -272,9 +272,9 @@ class DBHelper {
   /**
    * Change favourite status of a restaurant on the server.
    */
-  static favRestaurantAPI(id, fav, callback) {
+  static favRestaurantAPI(id, currentFavBoolean, callback) {
 
-    fetch(`${DBHelper.DATABASE_URL}/restaurants/${id}/?is_favorite=${fav}`, {
+    fetch(`${DBHelper.DATABASE_URL}/restaurants/${id}/?is_favorite=${!currentFavBoolean}`, {
       method: "put"/* ,
       body: JSON.stringify(review) */
     })
@@ -286,22 +286,15 @@ class DBHelper {
         return callback(error, null);
       }
     })
-    .then(data => {
-      // response object returns 'is_favorite' as a string
-      // it has to be boolean. fixing issue...
-      const newFavStatus = data.is_favorite == 'true';
-      // console.log(typeof newFavStatus);
-      // console.log(newFavStatus);
-
-      self.restaurant.is_favorite = newFavStatus;
-      
+    .then(data => {      
+      self.restaurant.is_favorite = data.is_favorite;
       // get recent Idb data and update
       get('idbRestaurants').then(restaurants => {
-    
+        
         if (typeof restaurants !== "undefined") {
           restaurants.map( restaurant => {
             if(restaurant.id === data.id) {
-              restaurant.is_favorite = newFavStatus;
+              restaurant.is_favorite = data.is_favorite;
               return;
             }
           });

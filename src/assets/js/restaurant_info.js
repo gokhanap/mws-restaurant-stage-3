@@ -2,7 +2,8 @@ import '../css/normalize.css';
 import '../css/styles.css';
 
 import DBHelper from './dbhelper';
-import { get } from 'idb-keyval';
+import { get, set } from 'idb-keyval';
+import { debug } from 'util';
 
 let restaurant;
 window.newMap;
@@ -89,7 +90,7 @@ const fillRestaurantHTML = (restaurant = self.restaurant) => {
   isFavourite.id = "is-favourite";
   isFavourite.addEventListener("click", handleFavourite);
 
-  if (restaurant.is_favorite) {
+  if (restaurant.is_favorite === "true" || restaurant.is_favorite === true) {
     isFavourite.setAttribute("class", "active");
   }
   name.appendChild(isFavourite);
@@ -222,22 +223,24 @@ const handleFavourite = (e) => {
   const id = self.restaurant.id;
   // Disable submit button
   favBtn.removeEventListener("click", handleFavourite)
-  // get current favourite status
-  const favstatus = self.restaurant.is_favorite;
 
+  let currentFavBoolean = self.restaurant.is_favorite;
+  if (currentFavBoolean === "true" || currentFavBoolean === true) {
+    currentFavBoolean = true;
+  } else {
+    currentFavBoolean = false;
+  }
   // update fav status on the server
-  DBHelper.favRestaurantAPI(id, !favstatus, (error, response) => {
-    // self.restaurant = restaurant;
+  DBHelper.favRestaurantAPI(id, currentFavBoolean, (error, response) => {
+
     if (!response) {
       console.error(error);
       alert(error);
       return;
     } else {
-      if (favstatus) {
-        self.restaurant.is_favorite = !self.restaurant.is_favorite;
+      if (response.is_favorite === "false") {
         favBtn.setAttribute("class", "");
       } else {
-        self.restaurant.is_favorite = !self.restaurant.is_favorite;
         favBtn.setAttribute("class", "active");
       }
     }
@@ -268,6 +271,7 @@ const handleSubmit = (e) => {
   };
   // Send review to server
   sendReview(review);
+  // createNewReviewHTML(review);
   // Enable submit button
   submitBtn.addEventListener("click", handleSubmit);
 }
@@ -280,24 +284,39 @@ const sendReview = (review) => {
     // self.restaurant = restaurant;
     if (!response) {
       window.addEventListener('online', syncReview);
+      set('syncNeeded', true);
       alert(error + " Your review will be sent when the connection is re-established.");
       return;
     } else {
-      const ul = document.getElementById('reviews-list');
-      ul.appendChild(createReviewHTML(response));
-      //reset form
-      const form = document.getElementById("review-form");
-      resetForm(form);
+      createNewReviewHTML(response);
     }
   });
 }
 
 /** 
+ * Create new review HTML 
+ */ 
+const createNewReviewHTML = (review) => {
+  const ul = document.getElementById('reviews-list');
+  ul.appendChild(createReviewHTML(review));
+  //reset form
+  const form = document.getElementById("review-form");
+  resetForm(form);
+}
+
+/** 
  * Sync review 
  */ 
-const syncReview = (review) => {
-  get('idbReviewTemp').then(review => sendReview(review));
-  window.removeEventListener('online', syncReview);
+const syncReview = () => {
+  get('syncNeeded').then( response => {
+    console.log('syncneeded', response);
+    response &&
+    get('idbReviewTemp')
+    .then(review => sendReview(review))
+    .then(()=> window.removeEventListener('online', syncReview))
+    .then(()=> set('syncNeeded', false));
+    
+  });
 }
 
 /**

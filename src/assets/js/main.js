@@ -2,12 +2,11 @@ import '../css/normalize.css';
 import '../css/styles.css';
 import DBHelper from './dbhelper';
 import lazyLoad from './lazyload';
-import WebFont from './webfont';
 
 let restaurants,
 neighborhoods,
 cuisines
-window.newMap;
+self.newMap;
 window.markers = [];
 
 window.fetchRestaurantsAPI = () => {
@@ -25,17 +24,12 @@ window.fetchRestaurantsAPI = () => {
 fetchRestaurantsAPI();
 
 /**
- *.
+ * Do it when DOMContentLoaded.
  */
 window.addEventListener('DOMContentLoaded', (event) => {
   initMap();
   fetchNeighborhoods();
   fetchCuisines();
-  WebFont.load({
-    google: {
-      families: ['Ubuntu:700', 'Ubuntu Condensed']
-    }
-  });
 });
 
 /**
@@ -105,6 +99,11 @@ window.fillCuisinesHTML = (cuisines = self.cuisines) => {
  * Initialize leaflet map, called from HTML.
  */
 window.initMap = () => {
+  // if (self.newMap) {
+    // self.newMap.off();
+    // self.newMap.remove();
+  // }
+
   self.newMap = L.map('map', {
         center: [40.722216, -73.987501],
         zoom: 12,
