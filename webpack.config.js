@@ -71,7 +71,7 @@ const config = {
 
     //temporary disabled
     //uncomment below
-        // new CleanWebpackPlugin(['dist']),
+        new CleanWebpackPlugin(['dist']),
     
     //   new HtmlWebpackPlugin({
       //   chunks: ['main'],
@@ -91,7 +91,7 @@ const config = {
     //temporary disabled
     //uncomment below
     new CopyWebpackPlugin([
-      // { from:'assets/media', to:'assets/media' },
+      { from:'assets/media', to:'assets/media' },
       { from:'sw.js', to:'sw.js' },
       { from:'manifest.json', to:'manifest.json' },
       { from:'index.html', to:'index.html' },
