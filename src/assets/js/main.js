@@ -2,21 +2,22 @@ import '../css/normalize.css';
 import '../css/styles.css';
 import DBHelper from './dbhelper';
 import lazyLoad from './lazyload';
+import WebFont from './webfont';
 
 let restaurants,
 neighborhoods,
-cuisines,
-map;
+cuisines
+window.newMap;
 window.markers = [];
 
-const fetchRestaurantsAPI = () => {
+window.fetchRestaurantsAPI = () => {
   DBHelper.fetchRestaurantsAPI((error, restaurants) => {
     if (error) { // Got an error
       console.log(error);
     } else {
       console.log('Restaurant API Success:', restaurants);
-      fetchNeighborhoods();
-      fetchCuisines();
+      // fetchNeighborhoods();
+      // fetchCuisines();
       // updateRestaurants();
     }
   });
@@ -24,16 +25,23 @@ const fetchRestaurantsAPI = () => {
 fetchRestaurantsAPI();
 
 /**
- * Fetch neighborhoods and cuisines as soon as the page is loaded.
+ *.
  */
-// window.addEventListener('DOMContentLoaded', (event) => {
-  // updateRestaurants();
-// });
+window.addEventListener('DOMContentLoaded', (event) => {
+  initMap();
+  fetchNeighborhoods();
+  fetchCuisines();
+  WebFont.load({
+    google: {
+      families: ['Ubuntu:700', 'Ubuntu Condensed']
+    }
+  });
+});
 
 /**
  * Fetch all neighborhoods and set their HTML.
  */
-const fetchNeighborhoods = () => {
+window.fetchNeighborhoods = () => {
   DBHelper.fetchNeighborhoods((error, neighborhoods) => {
     if (error) { // Got an error
       console.error(error);
@@ -47,7 +55,7 @@ const fetchNeighborhoods = () => {
 /**
  * Set neighborhoods HTML.
  */
-const fillNeighborhoodsHTML = (neighborhoods = self.neighborhoods) => {
+window.fillNeighborhoodsHTML = (neighborhoods = self.neighborhoods) => {
   const select = document.getElementById('neighborhoods-select');
   neighborhoods.forEach(neighborhood => {
     const option = document.createElement('option');
@@ -60,7 +68,7 @@ const fillNeighborhoodsHTML = (neighborhoods = self.neighborhoods) => {
 /**
  * Fetch all cuisines and set their HTML.
  */
-const fetchCuisines = () => {
+window.fetchCuisines = () => {
   DBHelper.fetchCuisines((error, cuisines) => {
     if (error) { // Got an error!
       console.error(error);
@@ -75,7 +83,7 @@ const fetchCuisines = () => {
  * Set cuisines HTML.
  */
 
-const fillCuisinesHTML = (cuisines = self.cuisines) => {
+window.fillCuisinesHTML = (cuisines = self.cuisines) => {
   const select = document.getElementById('cuisines-select');
   
   cuisines.forEach(cuisine => {
@@ -94,26 +102,30 @@ const fillCuisinesHTML = (cuisines = self.cuisines) => {
 }
 
 /**
- * Initialize Google map, called from HTML.
+ * Initialize leaflet map, called from HTML.
  */
 window.initMap = () => {
-  let loc = {
-    lat: 40.722216,
-    lng: -73.987501
-  };
-  self.map = new google.maps.Map(document.getElementById('map'), {
-    zoom: 12,
-    center: loc,
-    scrollwheel: false
-  });
+  self.newMap = L.map('map', {
+        center: [40.722216, -73.987501],
+        zoom: 12,
+        scrollWheelZoom: false
+      });
+  L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.jpg70?access_token={mapboxToken}', {
+    mapboxToken: 'pk.eyJ1IjoiZ29raGFuYXAiLCJhIjoiY2ppeHM4OWl2MDJzaDNrcXBqN25tZzNrZCJ9.cxPDTLgFdjaMdmj06H_DUg',
+    maxZoom: 18,
+    attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
+      '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+      'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+    id: 'mapbox.streets'
+  }).addTo(newMap);
+
   updateRestaurants();
-  // addMarkersToMap();
 }
 
 /**
  * Update page and map for current restaurants.
  */
-const updateRestaurants = () => {
+window.updateRestaurants = () => {
   const cSelect = document.getElementById('cuisines-select');
   const nSelect = document.getElementById('neighborhoods-select');
   
@@ -133,28 +145,28 @@ const updateRestaurants = () => {
     }
   })
 }
-self.updateRestaurants = updateRestaurants;
+// self.updateRestaurants = updateRestaurants;
 
 /**
  * Clear current restaurants, their HTML and remove their map markers.
  */
-const resetRestaurants = (restaurants) => {
+window.resetRestaurants = (restaurants) => {
   // Remove all restaurants
   self.restaurants = [];
   const ul = document.getElementById('restaurants-list');
   ul.innerHTML = '';
-  // console.log(self.markers);
   // Remove all map markers
-  typeof self.markers !== "undefined" &&
-  self.markers.forEach(m => m.setMap(null));
-  self.markers = [];
+  if (self.markers) {
+    self.markers.forEach(marker => marker.remove());
+  }
+    self.markers = [];
   self.restaurants = restaurants;
 }
 
 /**
  * Create all restaurants HTML and add them to the webpage.
  */
-const fillRestaurantsHTML = (restaurants = self.restaurants) => {
+window.fillRestaurantsHTML = (restaurants = self.restaurants) => {
   const ul = document.getElementById('restaurants-list');
   restaurants.forEach(restaurant => {
     ul.append(createRestaurantHTML(restaurant));
@@ -166,7 +178,7 @@ const fillRestaurantsHTML = (restaurants = self.restaurants) => {
 /**
  * Create restaurant HTML.
  */
-const createRestaurantHTML = (restaurant) => {
+window.createRestaurantHTML = (restaurant) => {
   const li = document.createElement('li');
 
   const image = document.createElement('img');
@@ -202,17 +214,17 @@ const createRestaurantHTML = (restaurant) => {
 /**
  * Add markers for current restaurants to the map.
  */
-const addMarkersToMap = (restaurants = self.restaurants) => {
+window.addMarkersToMap = (restaurants = self.restaurants) => {
   restaurants.forEach(restaurant => {
     // Add marker to the map
-    const marker = DBHelper.mapMarkerForRestaurant(restaurant, self.map);
-    google.maps.event.addListener(marker, 'click', () => {
-      window.location.href = marker.url
-    });
+    const marker = DBHelper.mapMarkerForRestaurant(restaurant, self.newMap);
+    marker.on("click", onClick);
+    function onClick() {
+      window.location.href = marker.options.url;
+    }
     self.markers.push(marker);
   });
 }
-
 // window.toggleMap = (e) => {
 //   const map = document.getElementById('map-container');
 //   if (map.style.display !== 'block') {

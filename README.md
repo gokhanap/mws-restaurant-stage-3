@@ -4,14 +4,16 @@ This project is made for Udacity Google Mobile Specialist nanodegree program.
 
 ## Project Overview: Stage 3
 
-This is a **Restaurant Reviews** project. Users are able to view restaurants information and view them on Google Maps.
+This is a **Restaurant Reviews** project. Users are able to view restaurants information and view them on leaflet/Mapbox Maps.
 A static webpage is converted to a mobile-ready web application. I took a static design that lacks accessibility and convert the design to be responsive on different sized displays and accessible for screen reader use. I also added a service worker to begin the process of creating a seamless offline experience for users.
 Restaurant data served from an api server. The client application works offline. JSON responses are cached using the IndexedDB API. Any data previously accessed while connected is reachable while offline.
+A form for adding new review and a favourite restaurant button added on stage three.
+Form works offline and synchronize data when online.
 
 ### Site Performance
-Progressive Web App: 91
-Performance: 80
-Accessibility: 95
+Progressive Web App: 98
+Performance: 91
+Accessibility: 100
 
 ### Instructions
 

@@ -22,7 +22,7 @@
           "Sunday": "12:00 pm - 4:00 pm, 5:30 pm - 11:00 pm"
         },
         "createdAt": 1504095563444,
-        "updatedAt": "2018-06-27T17:48:57.894Z",
+        "updatedAt": "2018-06-28T00:10:43.284Z",
         "id": 1,
         "is_favorite": "false"
       },
@@ -584,6 +584,15 @@
         "createdAt": "2018-06-27T20:51:18.624Z",
         "updatedAt": "2018-06-27T20:51:18.624Z",
         "id": 55
+      },
+      {
+        "restaurant_id": 1,
+        "name": "dfhdfh",
+        "rating": "1",
+        "comments": "dddh",
+        "createdAt": "2018-06-28T00:10:49.260Z",
+        "updatedAt": "2018-06-28T00:10:49.260Z",
+        "id": 56
       }
     ]
   },
@@ -639,7 +648,7 @@
       "id": 10
     },
     "reviews": {
-      "id": 55
+      "id": 56
     }
   }
 }
