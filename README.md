@@ -1,3 +1,5 @@
+![Restaurant Reviews preview](https://gokhanapaydin.com/img/p_restaurant_1200.jpg)
+
 # Restaurant Reviews Project
 
 This project is made for Udacity Google Mobile Specialist nanodegree program.
